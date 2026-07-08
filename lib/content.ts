@@ -100,13 +100,12 @@ export const siteConfig = {
   brochureHref: "#",
   mapHref: "https://maps.app.goo.gl/oMWDr9k7J4ezrDuy5",
   logo: "/logo.png",
-  heroImage: "/gallery/gallery-01.jpeg",
+  heroImage: "/gallery/gallery-08.jpeg",
   address: "Jl. Salam No. 10 Kel. Hadimulyo Barat Kec. Metro Pusat Kota Metro Lampung Indonesia",
   email: "pptqassalammetro@gmail.com",
   officeHours: "Senin - Sabtu : 08.00 - 17.00",
 };
 
-// Local gallery images — replace with real As Salam Metro photos when available
 const IMG = {
   belajarMengajar:       "/gallery/gallery-01.jpeg",
   santriBarisDisiplin:   "/gallery/gallery-02.jpeg",

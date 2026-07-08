@@ -63,7 +63,7 @@ export default async function Home() {
           <div 
             className="absolute inset-0" 
             style={{ 
-              background: 'linear-gradient(to right, #f8fafc 0%, rgba(248, 250, 252, 0.9) 10%, rgba(248, 250, 252, 0.4) 25%, transparent 55%)' 
+              background: 'linear-gradient(to right, rgba(248,250,252,1) 0%, rgba(248,250,252,0.98) 4%, rgba(248,250,252,0.93) 10%, rgba(248,250,252,0.82) 18%, rgba(248,250,252,0.65) 28%, rgba(248,250,252,0.43) 38%, rgba(248,250,252,0.22) 49%, rgba(248,250,252,0.08) 59%, rgba(248,250,252,0.02) 67%, transparent 74%)' 
             }} 
           />
         </div>
@@ -296,6 +296,60 @@ export default async function Home() {
                 </ScrollAnimation>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* Foto Kegiatan Section */}
+      <section className="site-section border-t border-[color:var(--line)] bg-slate-50">
+        <div className="site-shell space-y-8">
+          <div className="text-center space-y-3">
+            <ScrollAnimation direction="down">
+              <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl font-heading">Foto Kegiatan</h2>
+            </ScrollAnimation>
+            <ScrollAnimation direction="down" delay={0.1}>
+              <p className="max-w-2xl mx-auto text-muted-foreground">Momen kegiatan santri dan kegiatan Pondok Pesantren As Salam Metro</p>
+            </ScrollAnimation>
+            <ScrollAnimation direction="down" delay={0.2}>
+              <div className="w-16 h-1 bg-primary mx-auto rounded-none" />
+            </ScrollAnimation>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">
+            {/* Large featured image — spans 2 rows */}
+            <ScrollAnimation direction="up" delay={0.1} className="col-span-2 md:col-span-1 row-span-2">
+              <div className="relative overflow-hidden" style={{ height: "100%", minHeight: "280px" }}>
+                <Image src="/gallery/gallery-03.jpeg" alt="Tasmi' Hafalan Al-Qur'an 30 Juz As Salam Metro" fill className="object-cover hover:scale-105 transition-transform duration-500" />
+              </div>
+            </ScrollAnimation>
+            <ScrollAnimation direction="up" delay={0.15}>
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <Image src="/gallery/gallery-08.jpeg" alt="Santri Putri As Salam Metro bersama Ustadz" fill className="object-cover hover:scale-105 transition-transform duration-500" />
+              </div>
+            </ScrollAnimation>
+            <ScrollAnimation direction="up" delay={0.2}>
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <Image src="/gallery/gallery-02.jpeg" alt="Santri Putra Pondok Pesantren As Salam Metro" fill className="object-cover hover:scale-105 transition-transform duration-500" />
+              </div>
+            </ScrollAnimation>
+            <ScrollAnimation direction="up" delay={0.25}>
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <Image src="/gallery/gallery-04.jpeg" alt="Kegiatan Santri Putri As Salam Metro" fill className="object-cover hover:scale-105 transition-transform duration-500" />
+              </div>
+            </ScrollAnimation>
+            <ScrollAnimation direction="up" delay={0.3}>
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <Image src="/gallery/gallery-06.jpeg" alt="Foto Bersama Santri As Salam Metro" fill className="object-cover hover:scale-105 transition-transform duration-500" />
+              </div>
+            </ScrollAnimation>
+          </div>
+
+          <div className="text-center pt-2">
+            <ScrollAnimation direction="up" delay={0.2} className="inline-block">
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/95 px-8 py-6 rounded-none text-sm font-bold uppercase tracking-wider shadow-sm" asChild>
+                <Link href="/galeri">Lihat Semua Foto <FaArrowRight className="inline ml-2 size-3" /></Link>
+              </Button>
+            </ScrollAnimation>
           </div>
         </div>
       </section>
