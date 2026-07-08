@@ -135,9 +135,9 @@ export function SiteHeader({
       </div>
 
       {/* Tier 2: Navigation Links (Desktop) / Hamburger Trigger & WA (Mobile) */}
-      <div className="w-full py-2 bg-white">
+      <div className="w-full py-2 bg-primary">
         <div className="site-shell flex items-center justify-between gap-6">
-          
+
           {/* Mobile Tier 2 Content (Below lg) */}
           <div className="flex lg:hidden w-full items-center justify-between">
             {/* Left: Mobile Sheet Trigger / Hamburger */}
@@ -146,7 +146,7 @@ export function SiteHeader({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-foreground size-9 rounded-none border-none p-0 flex items-center justify-start hover:bg-transparent"
+                  className="text-white size-9 rounded-none border-none p-0 flex items-center justify-start hover:bg-transparent"
                   aria-label="Buka menu"
                 >
                   <Menu className="size-6" />
@@ -214,7 +214,7 @@ export function SiteHeader({
             </Sheet>
 
             {/* Right: WhatsApp Button */}
-            <Button size="sm" className="bg-primary text-white hover:bg-primary/95 rounded-none px-4 py-4 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5" asChild>
+            <Button size="sm" className="bg-white text-primary hover:bg-white/90 rounded-none px-4 py-4 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5" asChild>
               <a href={waHref} target="_blank" rel="noopener noreferrer">
                 <FaWhatsapp className="size-4" />
                 WHATSAPP
@@ -238,8 +238,8 @@ export function SiteHeader({
                     className={cn(
                       "rounded-none px-4 py-2 text-xs font-bold tracking-widest transition-all duration-300 uppercase",
                       active
-                        ? "text-primary font-bold"
-                        : "text-muted-foreground hover:text-primary"
+                        ? "text-white font-bold underline underline-offset-4"
+                        : "text-white/75 hover:text-white"
                     )}
                   >
                     {item.label}
@@ -249,7 +249,7 @@ export function SiteHeader({
             </nav>
 
             {/* WhatsApp Button */}
-            <Button size="sm" className="bg-primary text-white hover:bg-primary/95 rounded-none px-5 py-5 text-xs font-bold uppercase tracking-widest flex items-center gap-2" asChild>
+            <Button size="sm" className="bg-white text-primary hover:bg-white/90 rounded-none px-5 py-5 text-xs font-bold uppercase tracking-widest flex items-center gap-2" asChild>
               <a href={waHref} target="_blank" rel="noopener noreferrer">
                 <FaWhatsapp className="size-4" />
                 WHATSAPP

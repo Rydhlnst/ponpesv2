@@ -49,7 +49,7 @@ export default async function Home() {
   return (
     <div className="flex flex-col">
       {/* Light Background Hero Section matching the Al-Itqan screenshot */}
-      <section className="relative min-h-[75vh] sm:min-h-[80vh] md:min-h-[85vh] flex items-center justify-start overflow-hidden bg-slate-50 dark:bg-neutral-900 border-b border-border">
+      <section className="relative min-h-[75vh] sm:min-h-[80vh] md:min-h-[85vh] flex items-center justify-start overflow-hidden bg-[color:var(--muted)] dark:bg-neutral-900 border-b border-border">
         {/* Background Image on the right half or full screen with opacity */}
         <div className="absolute inset-y-0 right-0 z-0 w-full md:w-2/3 lg:w-7/12">
           <Image 
@@ -62,8 +62,8 @@ export default async function Home() {
           {/* Gradient fade on the left to ensure text readability */}
           <div 
             className="absolute inset-0" 
-            style={{ 
-              background: 'linear-gradient(to right, rgba(248,250,252,1) 0%, rgba(248,250,252,0.98) 4%, rgba(248,250,252,0.93) 10%, rgba(248,250,252,0.82) 18%, rgba(248,250,252,0.65) 28%, rgba(248,250,252,0.43) 38%, rgba(248,250,252,0.22) 49%, rgba(248,250,252,0.08) 59%, rgba(248,250,252,0.02) 67%, transparent 74%)' 
+            style={{
+              background: 'linear-gradient(to right, rgba(240,247,243,1) 0%, rgba(240,247,243,0.98) 4%, rgba(240,247,243,0.93) 10%, rgba(240,247,243,0.82) 18%, rgba(240,247,243,0.65) 28%, rgba(240,247,243,0.43) 38%, rgba(240,247,243,0.22) 49%, rgba(240,247,243,0.08) 59%, rgba(240,247,243,0.02) 67%, transparent 74%)'
             }} 
           />
         </div>
@@ -125,12 +125,12 @@ export default async function Home() {
 
           {/* Card 2: Guru Berpengalaman */}
           <ScrollAnimation direction="up" delay={0.2}>
-            <Card className="bg-white dark:bg-neutral-800 border-none shadow-md rounded-none p-6 h-full flex flex-col justify-between hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+            <Card className="bg-primary dark:bg-primary/80 border-none shadow-md rounded-none p-6 h-full flex flex-col justify-between hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
               <div className="space-y-3">
-                <h3 className="text-lg font-bold text-foreground font-heading border-l-4 border-primary pl-3">
+                <h3 className="text-lg font-bold text-white font-heading border-l-4 border-white pl-3">
                   Guru Berpengalaman
                 </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <p className="text-sm text-white/80 leading-relaxed">
                   Dibimbing oleh tenaga pendidik berpengalaman, profesional, dan kompeten di bidang pendidikan, kepesantrenan, dan kesiswaan.
                 </p>
               </div>
@@ -236,7 +236,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="profil" className="site-section border-t border-[color:var(--line)] bg-slate-50">
+      <section id="profil" className="site-section border-t border-[color:var(--line)] bg-[color:var(--muted)]">
         <div className="site-shell grid gap-10 lg:grid-cols-[0.38fr_0.62fr] lg:items-start">
           <div className="space-y-5 lg:sticky lg:top-24">
             <ScrollAnimation direction="left">
@@ -266,17 +266,17 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="site-section border-t border-[color:var(--line)] bg-white">
+      <section className="site-section border-t border-[color:var(--line)] bg-secondary">
         <div className="site-shell space-y-8">
           <div className="text-center space-y-3">
             <ScrollAnimation direction="down">
-              <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl font-heading">{homepage.whyUsTitle}</h2>
+              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl font-heading">{homepage.whyUsTitle}</h2>
             </ScrollAnimation>
             <ScrollAnimation direction="down" delay={0.1}>
-              <RichTextRenderer content={homepage.whyUsDescription} className="max-w-2xl mx-auto text-muted-foreground" />
+              <RichTextRenderer content={homepage.whyUsDescription} className="max-w-2xl mx-auto text-white/70" />
             </ScrollAnimation>
             <ScrollAnimation direction="down" delay={0.2}>
-              <div className="w-16 h-1 bg-primary mx-auto rounded-none" />
+              <div className="w-16 h-1 bg-accent-gold mx-auto rounded-none" />
             </ScrollAnimation>
           </div>
           <div className="grid gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -284,13 +284,13 @@ export default async function Home() {
               const Icon = getIconComponent(item.iconKey);
               return (
                 <ScrollAnimation key={index} direction="up" delay={index * 0.1}>
-                  <Card className="border-none bg-white shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-300 h-full rounded-none">
+                  <Card className="border-none bg-white/8 shadow-sm hover:shadow-md hover:bg-white/12 transition-all duration-300 h-full rounded-none border border-white/10">
                     <CardHeader className="space-y-4">
-                      <div className="flex size-10 items-center justify-center rounded-none bg-primary/8 text-primary"><Icon className="size-5" /></div>
-                      <CardTitle className="text-xl font-bold text-foreground font-heading">{item.title}</CardTitle>
+                      <div className="flex size-10 items-center justify-center rounded-none bg-white/10 text-white"><Icon className="size-5" /></div>
+                      <CardTitle className="text-xl font-bold text-white font-heading">{item.title}</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-sm leading-7 text-muted-foreground">
-                      <RichTextRenderer content={item.description} className="text-sm leading-7 text-muted-foreground" />
+                    <CardContent className="text-sm leading-7 text-white/70">
+                      <RichTextRenderer content={item.description} className="text-sm leading-7 text-white/70" />
                     </CardContent>
                   </Card>
                 </ScrollAnimation>
@@ -301,7 +301,7 @@ export default async function Home() {
       </section>
 
       {/* Foto Kegiatan Section */}
-      <section className="site-section border-t border-[color:var(--line)] bg-slate-50">
+      <section className="site-section border-t border-[color:var(--line)] bg-[color:var(--muted)]">
         <div className="site-shell space-y-8">
           <div className="text-center space-y-3">
             <ScrollAnimation direction="down">
@@ -410,7 +410,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="site-section border-t border-[color:var(--line)] bg-slate-50">
+      <section className="site-section border-t border-[color:var(--line)] bg-[color:var(--muted)]">
         <div className="site-shell space-y-8">
           <div className="text-center space-y-3">
             <ScrollAnimation direction="down">
@@ -490,17 +490,17 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="site-section border-t border-[color:var(--line)] bg-slate-50">
+      <section className="site-section border-t border-[color:var(--line)] bg-primary">
         <div className="site-shell space-y-8">
           <div className="text-center space-y-3">
             <ScrollAnimation direction="down">
-              <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl font-heading">{homepage.testimonialsTitle}</h2>
+              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl font-heading">{homepage.testimonialsTitle}</h2>
             </ScrollAnimation>
             <ScrollAnimation direction="down" delay={0.1}>
-              <RichTextRenderer content={homepage.testimonialsDescription} className="max-w-2xl mx-auto text-muted-foreground" />
+              <RichTextRenderer content={homepage.testimonialsDescription} className="max-w-2xl mx-auto text-white/70" />
             </ScrollAnimation>
             <ScrollAnimation direction="down" delay={0.2}>
-              <div className="w-16 h-1 bg-primary mx-auto rounded-none" />
+              <div className="w-16 h-1 bg-white/50 mx-auto rounded-none" />
             </ScrollAnimation>
           </div>
           <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
