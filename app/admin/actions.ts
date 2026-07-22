@@ -6,7 +6,6 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { eq } from "drizzle-orm"
 
-import { clearAdminSession } from "@/lib/auth/session"
 import { verifyAdminSession } from "@/lib/auth/admin"
 import { getDb, schema } from "@/lib/db"
 import { richTextParagraph } from "@/lib/cms/rich-text"
@@ -28,11 +27,6 @@ function parseRichText(formData: FormData, key: string) {
   } catch {
     return richTextParagraph(raw)
   }
-}
-
-export async function logoutAction() {
-  await clearAdminSession()
-  redirect("/admin/login")
 }
 
 // -----------------------------------------------------------------------------

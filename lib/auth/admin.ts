@@ -12,11 +12,24 @@ const loginSchema = z.object({
 })
 
 export const verifyAdminSession = cache(async () => {
-  const session = await getAdminSession()
-  if (!session) {
+  try {
+    const session = await getAdminSession()
+    if (!session) {
+      redirect("/admin/login")
+    }
+    return session
+  } catch (error) {
+    if (
+      error &&
+      typeof error === "object" &&
+      "digest" in error &&
+      typeof (error as { digest: string }).digest === "string" &&
+      (error as { digest: string }).digest.startsWith("NEXT_REDIRECT")
+    ) {
+      throw error
+    }
     redirect("/admin/login")
   }
-  return session
 })
 
 export async function validateAdminCredentials(input: {

@@ -1,6 +1,6 @@
 ﻿import Link from "next/link"
 
-import { logoutAction } from "@/app/admin/actions"
+import { logoutAction } from "@/app/admin/logout-action"
 import { adminNavItems } from "@/lib/cms/admin-nav"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
