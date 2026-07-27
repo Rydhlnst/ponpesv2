@@ -22,24 +22,23 @@ type SiteSettingsEditorProps = {
 
 export function SiteSettingsEditor({ settings, initialLogoMediaId }: SiteSettingsEditorProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setIsSubmitting(true)
+    setError(null)
 
     const formData = new FormData(e.currentTarget)
-    const promise = updateSiteSettingsAction(formData)
-
-    toast.promise(promise, {
-      loading: "Memperbarui Pengaturan Website...",
-      success: "Pengaturan website berhasil diperbarui",
-      error: "Gagal memperbarui pengaturan website",
-    })
 
     try {
-      await promise
+      await updateSiteSettingsAction(formData)
+      toast.success("Pengaturan website berhasil diperbarui")
     } catch (err) {
       console.error(err)
+      const message = err instanceof Error ? err.message : "Gagal memperbarui pengaturan website"
+      setError(message)
+      toast.error(message)
     } finally {
       setIsSubmitting(false)
     }
@@ -47,6 +46,12 @@ export function SiteSettingsEditor({ settings, initialLogoMediaId }: SiteSetting
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-6 xl:grid-cols-[1.4fr_0.8fr]">
+      {error && (
+        <div className="col-span-full rounded-md bg-destructive/15 border border-destructive/20 p-4 text-sm text-destructive">
+          {error}
+        </div>
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle>Identitas & Konten Utama</CardTitle>

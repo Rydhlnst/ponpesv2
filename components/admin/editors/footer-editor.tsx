@@ -19,24 +19,23 @@ type FooterEditorProps = {
 
 export function FooterEditor({ footer }: FooterEditorProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setIsSubmitting(true)
+    setError(null)
 
     const formData = new FormData(e.currentTarget)
-    const promise = updateFooterAction(formData)
-
-    toast.promise(promise, {
-      loading: "Memperbarui Pengaturan Footer...",
-      success: "Pengaturan Footer berhasil diperbarui",
-      error: "Gagal memperbarui Pengaturan Footer",
-    })
 
     try {
-      await promise
+      await updateFooterAction(formData)
+      toast.success("Pengaturan Footer berhasil diperbarui")
     } catch (err) {
       console.error(err)
+      const message = err instanceof Error ? err.message : "Gagal memperbarui Pengaturan Footer"
+      setError(message)
+      toast.error(message)
     } finally {
       setIsSubmitting(false)
     }
@@ -52,6 +51,12 @@ export function FooterEditor({ footer }: FooterEditorProps) {
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        {error && (
+          <div className="rounded-md bg-destructive/15 border border-destructive/20 p-4 text-sm text-destructive">
+            {error}
+          </div>
+        )}
+
         <Card>
           <CardHeader>
             <CardTitle>Konten Footer</CardTitle>

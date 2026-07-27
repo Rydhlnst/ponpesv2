@@ -19,24 +19,23 @@ type ProfileEditorProps = {
 
 export function ProfileEditor({ profile }: ProfileEditorProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setIsSubmitting(true)
+    setError(null)
 
     const formData = new FormData(e.currentTarget)
-    const promise = updateProfilePageAction(formData)
-
-    toast.promise(promise, {
-      loading: "Memperbarui Halaman Profil...",
-      success: "Halaman Profil berhasil diperbarui",
-      error: "Gagal memperbarui Halaman Profil",
-    })
 
     try {
-      await promise
+      await updateProfilePageAction(formData)
+      toast.success("Halaman Profil berhasil diperbarui")
     } catch (err) {
       console.error(err)
+      const message = err instanceof Error ? err.message : "Gagal memperbarui Halaman Profil"
+      setError(message)
+      toast.error(message)
     } finally {
       setIsSubmitting(false)
     }
@@ -52,6 +51,12 @@ export function ProfileEditor({ profile }: ProfileEditorProps) {
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        {error && (
+          <div className="rounded-md bg-destructive/15 border border-destructive/20 p-4 text-sm text-destructive">
+            {error}
+          </div>
+        )}
+
         <Card>
           <CardHeader>
             <CardTitle>Konten Profil Utama</CardTitle>

@@ -60,10 +60,15 @@ export async function updateSiteSettingsAction(formData: FormData) {
     updatedAt: new Date(),
   }
 
-  await db.insert(schema.siteSettings).values(values).onConflictDoUpdate({
-    target: schema.siteSettings.id,
-    set: values,
-  })
+  try {
+    await db.insert(schema.siteSettings).values(values).onConflictDoUpdate({
+      target: schema.siteSettings.id,
+      set: values,
+    })
+  } catch (err) {
+    console.error("Database update failed:", err)
+    throw new Error("Gagal menyimpan pengaturan website. Silakan coba lagi.")
+  }
 
   revalidatePath("/", "layout")
   revalidatePath("/admin/site-settings")
@@ -77,7 +82,7 @@ export async function updateHomepageAction(formData: FormData) {
   await verifyAdminSession()
 
   const db = getDb()
-  if (!db) throw new Error("DB not initialized")
+  if (!db) throw new Error("Database tidak terhubung. Silakan coba lagi nanti.")
 
   const values = {
     id: "homepage",
@@ -113,10 +118,15 @@ export async function updateHomepageAction(formData: FormData) {
     updatedAt: new Date(),
   }
 
-  await db.insert(schema.homepageSections).values(values).onConflictDoUpdate({
-    target: schema.homepageSections.id,
-    set: values,
-  })
+  try {
+    await db.insert(schema.homepageSections).values(values).onConflictDoUpdate({
+      target: schema.homepageSections.id,
+      set: values,
+    })
+  } catch (err) {
+    console.error("Database update failed:", err)
+    throw new Error("Gagal menyimpan data halaman beranda. Silakan coba lagi.")
+  }
 
   revalidatePath("/", "layout")
 }
@@ -128,7 +138,7 @@ export async function updateFooterAction(formData: FormData) {
   await verifyAdminSession()
 
   const db = getDb()
-  if (!db) throw new Error("DB not initialized")
+  if (!db) throw new Error("Database tidak terhubung. Silakan coba lagi nanti.")
 
   const values = {
     id: "footer",
@@ -138,10 +148,15 @@ export async function updateFooterAction(formData: FormData) {
     updatedAt: new Date(),
   }
 
-  await db.insert(schema.footerSettings).values(values).onConflictDoUpdate({
-    target: schema.footerSettings.id,
-    set: values,
-  })
+  try {
+    await db.insert(schema.footerSettings).values(values).onConflictDoUpdate({
+      target: schema.footerSettings.id,
+      set: values,
+    })
+  } catch (err) {
+    console.error("Database update failed:", err)
+    throw new Error("Gagal menyimpan pengaturan footer. Silakan coba lagi.")
+  }
 
   revalidatePath("/", "layout")
 }
@@ -153,7 +168,7 @@ export async function updateProfilePageAction(formData: FormData) {
   await verifyAdminSession()
 
   const db = getDb()
-  if (!db) throw new Error("DB not initialized")
+  if (!db) throw new Error("Database tidak terhubung. Silakan coba lagi nanti.")
 
   const values = {
     id: "profile",
@@ -163,10 +178,15 @@ export async function updateProfilePageAction(formData: FormData) {
     updatedAt: new Date(),
   }
 
-  await db.insert(schema.profilePage).values(values).onConflictDoUpdate({
-    target: schema.profilePage.id,
-    set: values,
-  })
+  try {
+    await db.insert(schema.profilePage).values(values).onConflictDoUpdate({
+      target: schema.profilePage.id,
+      set: values,
+    })
+  } catch (err) {
+    console.error("Database update failed:", err)
+    throw new Error("Gagal menyimpan data profil. Silakan coba lagi.")
+  }
 
   revalidatePath("/", "layout")
 }
@@ -178,7 +198,7 @@ export async function updateContactPageAction(formData: FormData) {
   await verifyAdminSession()
 
   const db = getDb()
-  if (!db) throw new Error("DB not initialized")
+  if (!db) throw new Error("Database tidak terhubung. Silakan coba lagi nanti.")
 
   const values = {
     id: "contact",
@@ -191,10 +211,15 @@ export async function updateContactPageAction(formData: FormData) {
     updatedAt: new Date(),
   }
 
-  await db.insert(schema.contactPage).values(values).onConflictDoUpdate({
-    target: schema.contactPage.id,
-    set: values,
-  })
+  try {
+    await db.insert(schema.contactPage).values(values).onConflictDoUpdate({
+      target: schema.contactPage.id,
+      set: values,
+    })
+  } catch (err) {
+    console.error("Database update failed:", err)
+    throw new Error("Gagal menyimpan data kontak. Silakan coba lagi.")
+  }
 
   revalidatePath("/", "layout")
 }
@@ -207,58 +232,105 @@ export async function uploadMediaAction(formData: FormData) {
 
   const file = formData.get("file") as File | null
   if (!file || file.size === 0) {
-    throw new Error("No file uploaded")
+    throw new Error("Tidak ada file yang dipilih. Silakan pilih file gambar terlebih dahulu.")
   }
 
-  const bytes = await file.arrayBuffer()
-  const buffer = Buffer.from(bytes)
+  const maxSize = 10 * 1024 * 1024 // 10MB
+  if (file.size > maxSize) {
+    throw new Error(`Ukuran file terlalu besar (${(file.size / 1024 / 1024).toFixed(1)}MB). Maksimal 10MB.`)
+  }
 
-  // Upload to R2 (with WebP compression fallback to disk)
-  const { url, storageKey } = await uploadAsset(buffer, file.name, file.type)
+  if (!file.type.startsWith("image/")) {
+    throw new Error(`Format file tidak didukung (${file.type}). Hanya file gambar yang diperbolehkan.`)
+  }
+
+  let buffer: Buffer
+  try {
+    const bytes = await file.arrayBuffer()
+    buffer = Buffer.from(bytes)
+  } catch {
+    throw new Error("Gagal membaca file. Silakan coba lagi dengan file lain.")
+  }
+
+  let url: string, storageKey: string
+  try {
+    const result = await uploadAsset(buffer, file.name, file.type)
+    url = result.url
+    storageKey = result.storageKey
+  } catch (err) {
+    console.error("R2 upload failed:", err)
+    throw new Error("Gagal mengunggah file ke storage. Pastikan konfigurasi R2 sudah benar.")
+  }
 
   const db = getDb()
-  if (!db) throw new Error("DB not initialized")
+  if (!db) throw new Error("Database tidak terhubung. Silakan coba lagi nanti.")
 
   const isImage = file.type.startsWith("image/")
   const finalMime = isImage && file.type !== "image/svg+xml" && file.type !== "image/gif"
     ? "image/webp"
     : file.type
 
-  const [inserted] = await db
-    .insert(schema.mediaAssets)
-    .values({
-      label: file.name,
-      alt: file.name,
-      kind: "image",
-      storageKey,
-      url,
-      mimeType: finalMime,
-      size: buffer.length,
-    })
-    .returning()
+  try {
+    const [inserted] = await db
+      .insert(schema.mediaAssets)
+      .values({
+        label: file.name,
+        alt: file.name,
+        kind: "image",
+        storageKey,
+        url,
+        mimeType: finalMime,
+        size: buffer.length,
+      })
+      .returning()
 
-  revalidatePath("/admin/media-library")
-  return inserted
+    resetMediaCache()
+    revalidatePath("/admin/media-library")
+    return inserted
+  } catch (err) {
+    console.error("Database insert failed:", err)
+    throw new Error("Gagal menyimpan data media ke database. Silakan coba lagi.")
+  }
 }
 
 export async function deleteMediaAction(id: string) {
   await verifyAdminSession()
 
   const db = getDb()
-  if (!db) throw new Error("DB not initialized")
+  if (!db) throw new Error("Database tidak terhubung. Silakan coba lagi nanti.")
 
-  const [asset] = await db
-    .select()
-    .from(schema.mediaAssets)
-    .where(eq(schema.mediaAssets.id, id))
-    .limit(1)
+  let asset: any
+  try {
+    const result = await db
+      .select()
+      .from(schema.mediaAssets)
+      .where(eq(schema.mediaAssets.id, id))
+      .limit(1)
+    asset = result[0]
+  } catch (err) {
+    console.error("Database query failed:", err)
+    throw new Error("Gagal mengambil data media dari database.")
+  }
 
-  if (!asset) return
+  if (!asset) {
+    throw new Error("Media tidak ditemukan. Mungkin sudah dihapus sebelumnya.")
+  }
 
-  // Delete from R2 or local disk
-  await deleteAsset(asset.storageKey)
+  try {
+    await deleteAsset(asset.storageKey)
+  } catch (err) {
+    console.error("R2 delete failed:", err)
+    throw new Error("Gagal menghapus file dari storage. Silakan coba lagi.")
+  }
 
-  await db.delete(schema.mediaAssets).where(eq(schema.mediaAssets.id, id))
+  try {
+    await db.delete(schema.mediaAssets).where(eq(schema.mediaAssets.id, id))
+  } catch (err) {
+    console.error("Database delete failed:", err)
+    throw new Error("Gagal menghapus data media dari database.")
+  }
+
+  resetMediaCache()
   revalidatePath("/admin/media-library")
   revalidatePath("/", "layout")
 }
@@ -300,17 +372,22 @@ export async function saveCollectionItemAction(slug: string, id: string | null, 
   await verifyAdminSession()
 
   const db = getDb()
-  if (!db) throw new Error("DB not initialized")
+  if (!db) throw new Error("Database tidak terhubung. Silakan coba lagi nanti.")
 
   const table = getTableBySlug(slug)
 
   // Ensure updatedAt is present
   const data = { ...values, updatedAt: new Date() }
 
-  if (id) {
-    await db.update(table).set(data).where(eq((table as any).id, id))
-  } else {
-    await db.insert(table).values(data)
+  try {
+    if (id) {
+      await db.update(table).set(data).where(eq((table as any).id, id))
+    } else {
+      await db.insert(table).values(data)
+    }
+  } catch (err) {
+    console.error("Database save failed:", err)
+    throw new Error(`Gagal menyimpan data ${slug}. Silakan coba lagi.`)
   }
 
   revalidatePath("/", "layout")
@@ -320,10 +397,16 @@ export async function deleteCollectionItemAction(slug: string, id: string) {
   await verifyAdminSession()
 
   const db = getDb()
-  if (!db) throw new Error("DB not initialized")
+  if (!db) throw new Error("Database tidak terhubung. Silakan coba lagi nanti.")
 
   const table = getTableBySlug(slug)
-  await db.delete(table).where(eq((table as any).id, id))
+
+  try {
+    await db.delete(table).where(eq((table as any).id, id))
+  } catch (err) {
+    console.error("Database delete failed:", err)
+    throw new Error(`Gagal menghapus item dari ${slug}. Silakan coba lagi.`)
+  }
 
   revalidatePath("/", "layout")
 }
@@ -332,15 +415,20 @@ export async function reorderCollectionItemsAction(slug: string, orderedIds: str
   await verifyAdminSession()
 
   const db = getDb()
-  if (!db) throw new Error("DB not initialized")
+  if (!db) throw new Error("Database tidak terhubung. Silakan coba lagi nanti.")
 
   const table = getTableBySlug(slug)
 
-  for (let i = 0; i < orderedIds.length; i++) {
-    await db
-      .update(table)
-      .set({ sortOrder: i, updatedAt: new Date() })
-      .where(eq((table as any).id, orderedIds[i]))
+  try {
+    for (let i = 0; i < orderedIds.length; i++) {
+      await db
+        .update(table)
+        .set({ sortOrder: i, updatedAt: new Date() })
+        .where(eq((table as any).id, orderedIds[i]))
+    }
+  } catch (err) {
+    console.error("Database reorder failed:", err)
+    throw new Error(`Gagal mengubah urutan item ${slug}. Silakan coba lagi.`)
   }
 
   revalidatePath("/", "layout")
@@ -350,5 +438,11 @@ export async function getMediaAssetsAction() {
   await verifyAdminSession()
   const db = getDb()
   if (!db) return []
-  return await db.select().from(schema.mediaAssets).orderBy(schema.mediaAssets.createdAt)
+
+  try {
+    return await db.select().from(schema.mediaAssets).orderBy(schema.mediaAssets.createdAt)
+  } catch (err) {
+    console.error("Database query failed:", err)
+    throw new Error("Gagal memuat data media. Silakan coba lagi.")
+  }
 }

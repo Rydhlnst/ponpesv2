@@ -100,15 +100,14 @@ export function CollectionManager({
   async function handleDelete(id: string) {
     if (!confirm("Apakah Anda yakin ingin menghapus item ini?")) return
 
-    const promise = deleteCollectionItemAction(slug, id).then(() => {
+    try {
+      await deleteCollectionItemAction(slug, id)
       setItems(items.filter((item) => item.id !== id))
-    })
-
-    toast.promise(promise, {
-      loading: "Menghapus item...",
-      success: "Item berhasil dihapus",
-      error: "Gagal menghapus item",
-    })
+      toast.success("Item berhasil dihapus")
+    } catch (err) {
+      console.error(err)
+      toast.error(err instanceof Error ? err.message : "Gagal menghapus item")
+    }
   }
 
   async function handleMove(index: number, direction: "up" | "down") {
@@ -120,32 +119,38 @@ export function CollectionManager({
     newItems[index] = newItems[targetIndex]
     newItems[targetIndex] = temp
 
+    const previousItems = [...items]
     setItems(newItems)
 
     const ids = newItems.map((item) => item.id)
-    const promise = reorderCollectionItemsAction(slug, ids)
 
-    toast.promise(promise, {
-      loading: "Memperbarui urutan...",
-      success: "Urutan berhasil diperbarui",
-      error: "Gagal memperbarui urutan",
-    })
+    try {
+      await reorderCollectionItemsAction(slug, ids)
+      toast.success("Urutan berhasil diperbarui")
+    } catch (err) {
+      console.error(err)
+      setItems(previousItems)
+      toast.error(err instanceof Error ? err.message : "Gagal memperbarui urutan")
+    }
   }
 
   async function handlePublishToggle(item: any) {
     const updatedVal = !item.published
-    const promise = saveCollectionItemAction(slug, item.id, {
-      ...item,
-      published: updatedVal,
-    }).then(() => {
-      setItems(items.map((i) => (i.id === item.id ? { ...i, published: updatedVal } : i)))
-    })
+    const previousItems = [...items]
 
-    toast.promise(promise, {
-      loading: updatedVal ? "Mempublikasikan item..." : "Menyembunyikan item...",
-      success: updatedVal ? "Item berhasil dipublikasikan" : "Item berhasil disembunyikan",
-      error: "Gagal memperbarui status publikasi",
-    })
+    setItems(items.map((i) => (i.id === item.id ? { ...i, published: updatedVal } : i)))
+
+    try {
+      await saveCollectionItemAction(slug, item.id, {
+        ...item,
+        published: updatedVal,
+      })
+      toast.success(updatedVal ? "Item berhasil dipublikasikan" : "Item berhasil disembunyikan")
+    } catch (err) {
+      console.error(err)
+      setItems(previousItems)
+      toast.error(err instanceof Error ? err.message : "Gagal memperbarui status publikasi")
+    }
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -165,22 +170,19 @@ export function CollectionManager({
       }
     })
 
-    const promise = saveCollectionItemAction(slug, editingId, values).then(() => {
+    try {
+      await saveCollectionItemAction(slug, editingId, values)
       setIsFormOpen(false)
+      toast.success(editingId ? "Item berhasil disimpan" : "Item berhasil ditambahkan")
       setTimeout(() => {
         window.location.reload()
       }, 500)
-    })
-
-    toast.promise(promise, {
-      loading: "Menyimpan data...",
-      success: editingId ? "Item berhasil disimpan" : "Item berhasil ditambahkan",
-      error: "Gagal menyimpan item",
-    })
-
-    promise.finally(() => {
+    } catch (err) {
+      console.error(err)
+      toast.error(err instanceof Error ? err.message : "Gagal menyimpan item")
+    } finally {
       setIsSubmitting(false)
-    })
+    }
   }
 
   return (

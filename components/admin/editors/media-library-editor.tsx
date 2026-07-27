@@ -37,22 +37,15 @@ export function MediaLibraryEditor({ initialAssets }: MediaLibraryEditorProps) {
     const formData = new FormData()
     formData.append("file", file)
 
-    const promise = uploadMediaAction(formData).then((newAsset) => {
+    try {
+      const newAsset = await uploadMediaAction(formData)
       if (newAsset) {
         setAssets([newAsset as MediaAsset, ...assets])
+        toast.success("File berhasil diunggah")
       }
-    })
-
-    toast.promise(promise, {
-      loading: "Mengunggah file...",
-      success: "File berhasil diunggah",
-      error: "Gagal mengunggah file",
-    })
-
-    try {
-      await promise
     } catch (err) {
       console.error(err)
+      toast.error(err instanceof Error ? err.message : "Gagal mengunggah file")
     } finally {
       setIsUploading(false)
     }
@@ -61,15 +54,14 @@ export function MediaLibraryEditor({ initialAssets }: MediaLibraryEditorProps) {
   async function handleDelete(id: string) {
     if (!confirm("Apakah Anda yakin ingin menghapus media ini? Gambar yang digunakan di halaman web akan hilang.")) return
 
-    const promise = deleteMediaAction(id).then(() => {
+    try {
+      await deleteMediaAction(id)
       setAssets(assets.filter((a) => a.id !== id))
-    })
-
-    toast.promise(promise, {
-      loading: "Menghapus media...",
-      success: "Media berhasil dihapus",
-      error: "Gagal menghapus media",
-    })
+      toast.success("Media berhasil dihapus")
+    } catch (err) {
+      console.error(err)
+      toast.error(err instanceof Error ? err.message : "Gagal menghapus media")
+    }
   }
 
   const filteredAssets = assets.filter((a) =>

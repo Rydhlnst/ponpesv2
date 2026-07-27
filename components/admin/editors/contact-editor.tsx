@@ -19,24 +19,23 @@ type ContactEditorProps = {
 
 export function ContactEditor({ contact }: ContactEditorProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setIsSubmitting(true)
+    setError(null)
 
     const formData = new FormData(e.currentTarget)
-    const promise = updateContactPageAction(formData)
-
-    toast.promise(promise, {
-      loading: "Memperbarui Halaman Kontak...",
-      success: "Halaman Kontak berhasil diperbarui",
-      error: "Gagal memperbarui Halaman Kontak",
-    })
 
     try {
-      await promise
+      await updateContactPageAction(formData)
+      toast.success("Halaman Kontak berhasil diperbarui")
     } catch (err) {
       console.error(err)
+      const message = err instanceof Error ? err.message : "Gagal memperbarui Halaman Kontak"
+      setError(message)
+      toast.error(message)
     } finally {
       setIsSubmitting(false)
     }
@@ -52,6 +51,12 @@ export function ContactEditor({ contact }: ContactEditorProps) {
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        {error && (
+          <div className="rounded-md bg-destructive/15 border border-destructive/20 p-4 text-sm text-destructive">
+            {error}
+          </div>
+        )}
+
         <Card>
           <CardHeader>
             <CardTitle>Konten Kontak Utama</CardTitle>

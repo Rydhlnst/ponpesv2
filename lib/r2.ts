@@ -1,7 +1,7 @@
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3"
 import sharp from "sharp"
 import { join } from "path"
-import { writeFileSync, unlinkSync, existsSync } from "fs"
+import { writeFileSync, unlinkSync, existsSync, mkdirSync } from "fs"
 
 const hasR2Env = !!(
   process.env.R2_ACCOUNT_ID &&
@@ -96,6 +96,9 @@ export async function uploadAsset(
   // 3. Fallback to local disk storage
   console.warn("Cloudflare R2 is not configured. Falling back to local disk storage.")
   const uploadDir = join(process.cwd(), "public", "uploads")
+  if (!existsSync(uploadDir)) {
+    mkdirSync(uploadDir, { recursive: true })
+  }
   const filePath = join(uploadDir, storageKey)
   
   writeFileSync(filePath, processedBuffer)

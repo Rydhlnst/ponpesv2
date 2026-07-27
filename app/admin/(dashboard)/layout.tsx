@@ -3,6 +3,7 @@ import type { ReactNode } from "react"
 import { verifyAdminSession } from "@/lib/auth/admin"
 import { AdminHeader } from "@/components/admin/admin-header"
 import { AdminSidebar } from "@/components/admin/admin-sidebar"
+import { AdminToaster } from "@/components/admin/admin-toaster"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
@@ -22,6 +23,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
         <AdminHeader />
         <div className="flex flex-1 flex-col">{children}</div>
       </SidebarInset>
+      <AdminToaster />
     </SidebarProvider>
   )
 }
