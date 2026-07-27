@@ -5,12 +5,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { FaArrowLeft, FaWhatsapp } from "react-icons/fa6";
 import { ChevronDown } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 
 import { ScrollAnimation } from "@/components/uilayouts/scroll-animation";
+import { getIconComponent } from "@/lib/cms/icons";
 
 type FaqItem = { question: string; answer: string };
-type FaqCat = { category: string; icon: LucideIcon; items: FaqItem[] };
+type FaqCat = { category: string; iconKey: string; items: FaqItem[] };
 
 export function FaqPageClient({
   faqCategories,
@@ -76,7 +76,7 @@ export function FaqPageClient({
                 Kategori
               </p>
               {faqCategories.map((cat) => {
-                const Icon = cat.icon;
+                const Icon = getIconComponent(cat.iconKey);
                 const isActive = cat.category === activeCategory;
                 return (
                   <button

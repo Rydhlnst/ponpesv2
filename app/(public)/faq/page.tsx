@@ -1,5 +1,4 @@
 import { getFaqSection } from "@/lib/db/queries"
-import { getIconComponent } from "@/lib/cms/icons"
 import { FaqPageClient } from "./faq-client"
 
 function richTextToPlainText(richText: unknown): string {
@@ -17,7 +16,7 @@ export default async function FaqPage() {
 
   const faqCategories = categories.map((cat) => ({
     category: cat.name,
-    icon: getIconComponent(cat.iconKey),
+    iconKey: cat.iconKey,
     items: cat.items.map((item) => ({
       question: item.question,
       answer: richTextToPlainText(item.answer),

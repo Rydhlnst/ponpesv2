@@ -67,7 +67,7 @@ export default async function GaleriPage() {
                         style={{ aspectRatio: image.aspect }}
                       >
                         <Image
-                          src={image.image}
+                          src={image.image || "/gallery/gallery-01.jpeg"}
                           alt={image.alt}
                           fill
                           className="object-cover transition duration-300 group-hover:scale-[1.03]"
@@ -80,7 +80,7 @@ export default async function GaleriPage() {
                     <DialogContent className="max-w-4xl border-none bg-white rounded-none">
                       <DialogTitle className="sr-only">{image.alt}</DialogTitle>
                       <div className="relative aspect-[16/10] w-full overflow-hidden rounded-none bg-slate-950/10">
-                        <Image src={image.image} alt={image.alt} fill className="object-contain" />
+                        <Image src={image.image || "/gallery/gallery-01.jpeg"} alt={image.alt} fill className="object-contain" />
                       </div>
                       <p className="text-center text-sm leading-7 text-muted-foreground pt-2">{image.alt}</p>
                     </DialogContent>
