@@ -8,6 +8,7 @@ import { eq } from "drizzle-orm"
 
 import { verifyAdminSession } from "@/lib/auth/admin"
 import { getDb, schema } from "@/lib/db"
+import { resetMediaCache } from "@/lib/db/queries"
 import { richTextParagraph } from "@/lib/cms/rich-text"
 import { uploadAsset, deleteAsset } from "@/lib/r2"
 

@@ -331,7 +331,7 @@ export const defaultFooterSection = {
     { label: "Kontak", href: "/kontak", sortOrder: 5 },
   ],
   socialLinks: [
-    { platform: "facebook", href: "https://facebook.com", sortOrder: 0 },
+    { platform: "facebook", href: "https://facebook.com/assalammetroindonesia", sortOrder: 0 },
     { platform: "instagram", href: "https://instagram.com/assalammetroindonesia", sortOrder: 1 },
   ],
 }

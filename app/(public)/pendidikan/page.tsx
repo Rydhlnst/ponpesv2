@@ -195,7 +195,7 @@ export default async function PendidikanPage() {
                     </p>
                     <div className="flex gap-2">
                       {[
-                        { href: "https://facebook.com", icon: <FaFacebook className="size-4" /> },
+                        { href: "https://facebook.com/assalammetroindonesia", icon: <FaFacebook className="size-4" /> },
                         { href: "https://wa.me/6285609689565", icon: <FaWhatsapp className="size-4" /> },
                         { href: "https://instagram.com/assalammetroindonesia", icon: <FaInstagram className="size-4" /> },
                       ].map((s, i) => (

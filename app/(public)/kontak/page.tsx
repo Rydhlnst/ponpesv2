@@ -23,17 +23,17 @@ export default async function KontakPage() {
   const addressVal = alamatMethod?.value || siteConfig.address
 
   const waMethod = contact.methods.find((m) => m.type.toLowerCase() === "whatsapp")
-  const waVal = waMethod?.value || "082311649025"
+  const waVal = waMethod?.value || siteConfig.whatsapp.replace(/\D/g, "")
 
   const emailMethod = contact.methods.find((m) => m.type.toLowerCase() === "email")
-  const emailVal = emailMethod?.value || "info@alitqan.id"
+  const emailVal = emailMethod?.value || siteConfig.email
 
   const hoursMethod = contact.methods.find((m) => m.type.toLowerCase() === "clock" || m.type.toLowerCase() === "hours")
-  const hoursVal = hoursMethod?.value || "Mon - Fri : 08.00-17.00\nSat - Sun : Closed"
+  const hoursVal = hoursMethod?.value || siteConfig.officeHours
 
   // Map settings
   const loc = contact.locations[0]
-  const mapEmbedUrl = loc?.mapEmbedUrl || "https://maps.google.com/maps?q=Pesantren%20Al%20Itqan%20Jatisampurna%20Bekasi&t=&z=15&ie=UTF8&iwloc=&output=embed"
+  const mapEmbedUrl = loc?.mapEmbedUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3973.8055610815157!2d105.29813589999999!3d-5.1189912000000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e40bf2b89694ffb%3A0xe7bf1b66a0cae18c!2sPondok%20Pesantren%20As-Salam%20Metro%20Lampung!5e0!3m2!1sid!2sid!4v1783414583909"
 
   // Social icon helper
   const getSocialIcon = (platform: string) => {
@@ -67,7 +67,7 @@ export default async function KontakPage() {
               {/* Thick Orange Line */}
               <div className="w-full h-[3.5px] bg-primary mt-4 mb-6" />
               <h2 className="text-xl sm:text-2xl font-bold text-foreground font-sans">
-                {siteConfig.shortName === "As Salam Metro" ? "Al Itqan - Islamic Boarding School" : `${siteConfig.shortName} - Islamic Boarding School`}
+                {siteConfig.shortName} - Islamic Boarding School
               </h2>
               <p className="text-sm text-muted-foreground">
                 Mulai Perjalanan Ilmu Bersama Al-Qur'an
