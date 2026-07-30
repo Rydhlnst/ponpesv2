@@ -532,14 +532,15 @@ export default async function AdminSectionPage({
               type: "select",
               required: true,
               options: [
-                { label: "Square (1:1)", value: "square" },
-                { label: "Video (16:9)", value: "video" },
-                { label: "Tall (3:4)", value: "tall" },
+                { label: "Landscape (4:3)", value: "4/3" },
+                { label: "Widescreen (16:9)", value: "16/9" },
+                { label: "Portrait (3:4)", value: "3/4" },
+                { label: "Square (1:1)", value: "1/1" },
               ],
             },
             { name: "published", label: "Tampilkan di Website", type: "boolean" },
           ]}
-          defaultNewValues={{ aspect: "square", published: true }}
+          defaultNewValues={{ aspect: "4/3", published: true }}
         />
       </div>
     )

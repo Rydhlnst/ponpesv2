@@ -25,6 +25,7 @@ import {
   getFaqSection,
   getTestimonials,
   getPartnerItems,
+  getGallerySection,
 } from "@/lib/db/queries";
 
 type EducationProgram = Awaited<ReturnType<typeof getEducationSection>>["programs"][number];
@@ -43,12 +44,13 @@ export default async function Home() {
   const faq = await getFaqSection();
   const testimonialItems = await getTestimonials();
   const partners = await getPartnerItems();
+  const galleryItems = await getGallerySection();
 
   const faqPreview: FaqItem[] = faq[0]?.items.slice(0, 6) || [];
+  const galleryPreview = galleryItems.filter(g => g.published !== false).slice(0, 5);
 
   return (
     <div className="flex flex-col">
-      {/* Light Background Hero Section matching the Al-Itqan screenshot */}
       <section className="relative min-h-[75vh] sm:min-h-[80vh] md:min-h-[85vh] flex items-center justify-start overflow-hidden bg-[color:var(--muted)] dark:bg-neutral-900 border-b border-border">
         {/* Background Image on the right half or full screen with opacity */}
         <div className="absolute inset-y-0 right-0 z-0 w-full md:w-2/3 lg:w-7/12">
@@ -316,32 +318,20 @@ export default async function Home() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">
-            {/* Large featured image — spans 2 rows */}
-            <ScrollAnimation direction="up" delay={0.1} className="col-span-2 md:col-span-1 row-span-2">
-              <div className="relative overflow-hidden" style={{ height: "100%", minHeight: "280px" }}>
-                <Image src="/gallery/gallery-03.jpeg" alt="Tasmi' Hafalan Al-Qur'an 30 Juz As Salam Metro" fill className="object-cover hover:scale-105 transition-transform duration-500" />
-              </div>
-            </ScrollAnimation>
-            <ScrollAnimation direction="up" delay={0.15}>
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <Image src="/gallery/gallery-08.jpeg" alt="Santri Putri As Salam Metro bersama Ustadz" fill className="object-cover hover:scale-105 transition-transform duration-500" />
-              </div>
-            </ScrollAnimation>
-            <ScrollAnimation direction="up" delay={0.2}>
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <Image src="/gallery/gallery-02.jpeg" alt="Santri Putra Pondok Pesantren As Salam Metro" fill className="object-cover hover:scale-105 transition-transform duration-500" />
-              </div>
-            </ScrollAnimation>
-            <ScrollAnimation direction="up" delay={0.25}>
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <Image src="/gallery/gallery-04.jpeg" alt="Kegiatan Santri Putri As Salam Metro" fill className="object-cover hover:scale-105 transition-transform duration-500" />
-              </div>
-            </ScrollAnimation>
-            <ScrollAnimation direction="up" delay={0.3}>
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <Image src="/gallery/gallery-06.jpeg" alt="Foto Bersama Santri As Salam Metro" fill className="object-cover hover:scale-105 transition-transform duration-500" />
-              </div>
-            </ScrollAnimation>
+            {galleryPreview[0] && (
+              <ScrollAnimation direction="up" delay={0.1} className="col-span-2 md:col-span-1 row-span-2">
+                <div className="relative overflow-hidden" style={{ height: "100%", minHeight: "280px" }}>
+                  <Image src={galleryPreview[0].image || "/gallery/gallery-01.jpeg"} alt={galleryPreview[0].alt} fill className="object-cover hover:scale-105 transition-transform duration-500" />
+                </div>
+              </ScrollAnimation>
+            )}
+            {galleryPreview.slice(1).map((img, i) => (
+              <ScrollAnimation key={i} direction="up" delay={0.15 + i * 0.05}>
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <Image src={img.image || "/gallery/gallery-01.jpeg"} alt={img.alt} fill className="object-cover hover:scale-105 transition-transform duration-500" />
+                </div>
+              </ScrollAnimation>
+            ))}
           </div>
 
           <div className="text-center pt-2">
